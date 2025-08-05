@@ -1,0 +1,18 @@
+[submodule "src/modules/lambdatt-ui-toolcase"]
+	path = src/modules/lambdatt-ui-toolcase
+	url = git@github.com:LambdaTT/lambdatt-ui-toolcase.git
+[submodule "src/modules/lambdatt-ui-iam"]
+	path = src/modules/lambdatt-ui-iam
+	url = git@github.com:LambdaTT/lambdatt-ui-iam.git
+[submodule "src/modules/lambdatt-ui-bpm"]
+	path = src/modules/lambdatt-ui-bpm
+	url = git@github.com:LambdaTT/lambdatt-ui-bpm.git
+[submodule "src/modules/lambdatt-ui-customfields"]
+	path = src/modules/lambdatt-ui-customfields
+	url = git@github.com:LambdaTT/lambdatt-ui-customfields.git
+[submodule "src/modules/ui-layout-admin1"]
+	path = src/modules/ui-layout-admin1
+	url = git@github.com:LambdaTT/ui-layout-admin1.git
+[submodule "src/modules/lambdatt-ui-finances"]
+	path = src/modules/lambdatt-ui-finances
+	url = git@github.com:LambdaTT/lambdatt-ui-finances.git
