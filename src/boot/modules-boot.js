@@ -6,7 +6,7 @@ const allModules = import.meta.globEager(
   '../modules/*/index.js'    // literal, relativo a este arquivo
 )
 
-export default boot(({ app }) => {
+export default boot(({ app, router }) => {
   Object.entries(allModules).forEach(async ([path, mod]) => {
     // 1) tenta named export
     const module = mod;
@@ -14,7 +14,7 @@ export default boot(({ app }) => {
 
     // 2) invoca se for função
     if (!!fn && typeof fn === 'function') {
-      fn(app)
+      fn(app, router)
     }
   })
 })
