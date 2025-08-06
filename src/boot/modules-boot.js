@@ -15,9 +15,6 @@ export default boot(({ app }) => {
     // 2) invoca se for função
     if (!!fn && typeof fn === 'function') {
       fn(app)
-      console.log(`[boot] auto-wired module "${path}"`)
     }
   })
-
-  console.log('⚡ componentes registrados:', Object.keys(app._context.components))
 })
