@@ -587,3 +587,37 @@ framework: {
     ]
 },
 ```
+
+### 5. Edit the "/src/router/routes.js" file:
+
+```javascript
+import { mapRoutes } from 'src/lambdatt.js'
+import $sys from 'src/lambdatt.js'
+
+const routes = [
+  {
+    path: '/',
+    component: () => import('src/modules/ui-layout-admin1/src/layouts/AdminLayout.vue'),
+    children: [
+      ...mapRoutes()
+    ]
+  },
+
+  {
+    path: '/login',
+    component: $sys.getModule('iam')?.getPage('auth/login')
+  },
+
+  // Always leave this as last one,
+  // but you can also remove it
+  {
+    path: '/:catchAll(.*)*',
+    component: () => import('pages/ErrorNotFound.vue')
+  }
+]
+
+console.log('routes', routes);
+
+
+export default routes
+```
