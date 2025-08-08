@@ -79,12 +79,13 @@ function mapAppPages() {
     const pageUrl = [...parts.slice(3), pageName.toLowerCase()].join('/');
     const pageRoute = configs.route ?? `${pageUrl}${params.length > 0 ? `/:${params.join('/:')}` : ''}`
 
-    pagesMap[pageName] = {
+    pagesMap[pageUrl] = {
       path: pageRoute,
       component: mod.default,
       extras
     };
   }
+
   return pagesMap;
 }
 
@@ -92,37 +93,15 @@ function listModules() {
   return Object.keys(modules);
 }
 
-function findAndLoadModule(name) {
-  // Attempt to dynamically import the module
-  const allModules = import.meta.globEager(
-    './modules/*/index.js'    // literal, relativo a este arquivo
-  )
-
-  let module = {};
-  for (let i = 0; i < Object.values(allModules).length; i++) {
-    const mod = Object.values(allModules)[i];
-    if (mod.NAME === name) {
-      module = mod;
-      break;
-    }
-  }
-
-  if (!module || !module.default || !module.NAME) {
-    console.warn(`Module ${name} not found or does not have a valid default export.`);
-    return null;
-  }
-  return module.default;
+function moduleExists(name) {
+  return listModules().includes(name);
 }
 
 function getModule(modname) {
+  loadModules();
+
   let mod = modules[modname];
-  if (!!mod == false) {
-    mod = findAndLoadModule(modname);
-    if (!!mod == false) {
-      console.warn(`Module ${modname} not found.`);
-      return null;
-    }
-  }
+  if (!mod) return null;
 
   return {
     endpoints() {
@@ -141,6 +120,8 @@ function getModule(modname) {
 }
 
 function getService(uri) {
+  const error = new Error(`No service could be found at URI '${uri}'`);
+
   // Try to find a service at the app level first:
   const appService = appServices[uri];
   if (!!appService) return appService;
@@ -151,10 +132,12 @@ function getService(uri) {
   const serviceUri = parts.slice(1).join('.');
 
   const mod = modules[moduleName];
+  if (!!mod == false) throw error;
 
-  if (!!mod == false) return null;
+  const service = mod.SERVICES?.[serviceUri] ?? null;
+  if (!service) throw error;
 
-  return mod.SERVICES?.[serviceUri] ?? null;
+  return service;
 }
 
 function getRouter() {
@@ -171,6 +154,7 @@ export function wireItUp(app, router) {
   registerAppServices();
   registerComponents(mapAppComponents(), app);
   app.config.globalProperties['$listModules'] = listModules;
+  app.config.globalProperties['$moduleExists'] = moduleExists;
   app.config.globalProperties['$getModule'] = getModule;
   app.config.globalProperties['$getService'] = getService;
   app.config.globalProperties['$getRouter'] = getRouter;
@@ -181,12 +165,17 @@ export function mapRoutes() {
   loadModules();
 
   const result = [
-    ...Object.values(mapAppPages()),
+    ...Object.values(mapAppPages())
+      .filter(page => page.path !== false),
     ...Object.values(modules)
       .map(mod => mod.PAGES ?? null)
       .filter(pages => pages !== null && Object.keys(pages).length > 0)
       .reduce((acc, pages) => {
-        return [...acc, ...Object.values(pages)];
+        return [
+          ...acc,
+          ...Object.values(pages)
+            .filter(page => page.path !== false)
+        ];
       }, [])
   ];
 
@@ -196,6 +185,10 @@ export function mapRoutes() {
 export default {
   listModules() {
     return listModules();
+  },
+
+  moduleExists(name) {
+    return moduleExists(name);
   },
 
   getModule(name) {

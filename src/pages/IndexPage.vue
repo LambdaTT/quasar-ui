@@ -6,6 +6,10 @@
 </template>
 
 <script>
+export const __PAGE_CONFIG = {
+  route: ''
+}
+
 export default {
   name: 'IndexPage',
 

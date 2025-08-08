@@ -6,7 +6,6 @@ const routes = [
     path: '/',
     component: () => import('src/modules/ui-layout-admin1/src/layouts/AdminLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') },
       ...mapRoutes()
     ]
   },
@@ -23,5 +22,8 @@ const routes = [
     component: () => import('pages/ErrorNotFound.vue')
   }
 ]
+
+console.log('routes', routes);
+
 
 export default routes
