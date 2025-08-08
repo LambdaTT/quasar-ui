@@ -1,4 +1,4 @@
-import { IAM } from 'src/modules/lambdatt-ui-iam'
+import $sys from 'src/lambdatt.js'
 
 // MOCK DATA:
 // var data = {
@@ -504,7 +504,7 @@ import { IAM } from 'src/modules/lambdatt-ui-iam'
 
 export default {
   getData() {
-    return { loggedUser: IAM.SERVICES.auth.loggedUser, navigator: [] };
+    return { loggedUser: $sys.getService('iam/auth').loggedUser, navigator: [] };
     // const navigator = [...data.navigator]; // Clonando array de referência (evitar ponteiros antigos)
     // const result = [];
 

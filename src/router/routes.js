@@ -1,4 +1,5 @@
-import { mapRoutes, default as lambdatt } from 'src/lambdatt'
+import { mapRoutes } from 'src/lambdatt.js'
+import $sys from 'src/lambdatt.js'
 
 const routes = [
   {
@@ -12,7 +13,7 @@ const routes = [
 
   {
     path: '/login',
-    component: lambdatt.getModule('iam').getPage('AuthLogin')
+    component: $sys.getModule('iam')?.getPage('auth/login')
   },
 
   // Always leave this as last one,
